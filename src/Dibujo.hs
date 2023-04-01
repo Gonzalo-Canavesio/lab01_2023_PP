@@ -55,29 +55,38 @@ encimar = Encimar
 -- Componer negativamente es un error!
 comp :: (a -> a) -> Int -> a -> a
 comp f 0 a = a
-comp f x a 
+comp f n a | n > 0 =   f (comp f (n-1) a)
+           | otherwise = error "No se puede componer negativamente"
 
 
 -- Rotaciones de múltiplos de 90.
-r180 = undefined
+r180 :: Dibujo a -> Dibujo a
+r180 a = comp rotar 2 a
 
 r270 :: Dibujo a -> Dibujo a
-r270 = undefined
+r270 a = comp rotar 3 a
 
 -- Pone una figura sobre la otra, ambas ocupan el mismo espacio.
-(.-.) = undefined
-
+(.-.) :: Dibujo a -> Dibujo a -> Dibujo a
+(.-.) a b = apilar 0.5 0.5 a b  --nose sie hay que poer 0,5 o algo mas grande  
 -- Pone una figura al lado de la otra, ambas ocupan el mismo espacio.
-(///) = undefined
+(///) :: Dibujo a -> Dibujo a -> Dibujo a
+(///) a b = juntar 0.5 0.5 a b  
 
 -- Superpone una figura con otra.
-(^^^) = undefined
+(^^^) :: Dibujo a -> Dibujo a -> Dibujo a
+(^^^) a b = encimar a b
 
 -- Dadas cuatro figuras las ubica en los cuatro cuadrantes.
-cuarteto = undefined
+cuarteto :: Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a
+cuarteto a b c d = .-. (/// a b) (/// c d)  
+-- Junto a las figuras a y b en la parte de arriba donde a está a la izquierda y b a la derecha.
+-- Junto a las figuras c y d en la parte de abajo donde c está a la izquierda y d a la derecha.
+
 
 -- Una figura repetida con las cuatro rotaciones, superpuestas.
-encimar4 = undefined
+encimar4 :: Dibujo a -> Dibujo a 
+encimar4 a = (^^^) a ((^^^) (rotar a) ((^^^) (r180 a) (r270 a)))
 
 -- Cuadrado con la misma figura rotada i * 90, para i ∈ {0, ..., 3}.
 -- No confundir con encimar4!
