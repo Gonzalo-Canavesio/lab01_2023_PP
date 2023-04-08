@@ -119,4 +119,9 @@ mapDib f (Juntar x y d1 d2) = Juntar x y (mapDib f d1) (mapDib f d2)
 mapDib f (Encimar d1 d2) = Encimar (mapDib f d1) (mapDib f d2)
 
 -- Junta todas las figuras básicas de un dibujo.
-figuras = undefined
+figuras :: Dibujo a -> [a]
+figuras a = foldDib (\a -> [a]) (id) (id) (id) (\x y a b -> a ++ b) (\x y a b -> a ++ b) (\a b -> a ++ b) a
+-- (\a -> [a])  haciendo referencia a fFig de foldDib, que cada vez que encuentra una figura, la pone en una lista
+-- (id) haciendo referencia a fRot, fEsp y fRot45 de foldDib, que cada vez que encuentra una rotacion, espejado o rotacion de 45, no hace nada
+-- (\x y a b -> a ++ b) haciendo referencia a fApi y fJun de foldDib, que cada vez que encuentra una apilacion o una juntacion, concatena las listas de figuras de los dos dibujos
+-- (\a b -> a ++ b) haciendo referencia a fEnc de foldDib, que cada vez que encuentra una encimacion, concatena las listas de figuras de los dos dibujos
