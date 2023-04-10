@@ -7,13 +7,37 @@ module Interp (
 
 import Graphics.Gloss(Picture, Display(InWindow), makeColorI, color, pictures, translate, white, display)
 import Dibujo (Dibujo, foldDib)
-import FloatingPic (FloatingPic, Output, grid)
-
+import FloatingPic (FloatingPic, Output, grid, half) -- Agregamos el half para utilizarlo en InterpRot45
+import qualified Graphics.Gloss.Data.Point.Arithmetic as V -- Agregamos esta linea para poder utilizar operadores de vectores
 
 -- Interpretación de un dibujo
 -- formulas sacadas del enunciado
 interp :: Output a -> Output (Dibujo a)
-interp = undefined
+interp interpBasica = foldDib interpBasica interpRotar interpEspejar interpRot45 interpApilar interpJuntar interpEncimar
+
+interpRotar :: FloatingPic -> FloatingPic
+interpRotar f x w h = f (x V.+ w) h (V.negate w)
+
+interpRot45 :: FloatingPic -> FloatingPic
+interpRot45 f x w h = f (x V.+ half (w V.+ h)) (half (w V.+ h)) (half (h V.- w))
+
+interpEspejar :: FloatingPic -> FloatingPic
+interpEspejar f x w = f (x V.+ w) (V.negate w)
+
+interpApilar :: Float -> Float -> FloatingPic -> FloatingPic -> FloatingPic
+interpApilar n m f g x w h = pictures [f (x V.+ h') w (r V.* h),g x w h']
+      where r' = n/(n+m)
+            r = m/(n+m)
+            h' = r' V.* h
+
+interpJuntar :: Float -> Float -> FloatingPic -> FloatingPic -> FloatingPic
+interpJuntar n m f g x w h = pictures [f x w' h, g (x V.+ w') (r' V.* w) h]
+      where r' = n/(n+m)
+            r = m/(n+m)
+            w' = r V.* w
+
+interpEncimar :: FloatingPic -> FloatingPic -> FloatingPic
+interpEncimar f g x w h = pictures[f x w h, g x w h]
 
 -- Configuración de la interpretación
 data Conf = Conf {
