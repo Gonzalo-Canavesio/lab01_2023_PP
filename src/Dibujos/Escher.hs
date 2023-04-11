@@ -11,7 +11,7 @@ import Dibujo (Dibujo, figura, juntar, apilar, rot45, rotar, encimar, espejar, r
 import FloatingPic (Output, half, zero, vacia)
 import Interp (Conf(..), interp)
 
-data Basica = Triangulo | Vacia
+data Basica = Triangulo | Vacia | Efe
     deriving (Show, Eq)
 
 type Escher = Basica
@@ -37,10 +37,8 @@ lado :: Int -> Dibujo Escher -> Dibujo Escher
 lado 1 p = cuarteto (figura Vacia) (figura Vacia) (rotar (dibujoT p)) (dibujoT p)
 lado n p = cuarteto (lado (n-1) p) (lado (n-1) p) (rotar (dibujoT p)) (dibujoT p)
 
-noneto p q r s t u v w x =  apilar 1.0 2.0
-                            (juntar 1.0 2.0 p (juntar 1.0 1.0 q r))
-                            (apilar 1.0 1.0 (juntar 1.0 2.0 s (juntar 1.0 1.0 t u)) 
-                                        (juntar 1.0 2.0 v (juntar 1.0 1.0 w x)))
+noneto p q r s t u v w x = juntar 1 2 (juntar 1 1 (apilar3 p s v) (apilar3 q t w)) (apilar3 r u x)
+    where apilar3 a b c = apilar 2 1 a (apilar 1 1 b c)
 
 -- El dibujo de Escher: squarelimit
 escher :: Int -> Escher -> Dibujo Escher
@@ -54,11 +52,6 @@ escher n p = noneto (esquina n (figura p)) --
                     (r180 (lado n (figura p)))
                     (r180 (esquina n (figura p))) --
 
--- Rotar (Rotar (Rotar ()))
-
-escher2 :: Int -> Escher -> Dibujo Escher
-escher2 n p = (esquina n (figura p))
-
 interpBas :: Output Escher
 interpBas Vacia x y w = vacia x y w
 interpBas Triangulo x y w = pictures [line $ triangulo x y w, cara x y w]
@@ -69,5 +62,5 @@ interpBas Triangulo x y w = pictures [line $ triangulo x y w, cara x y w]
 escherConf :: Conf
 escherConf = Conf {
     name = "Escher",
-    pic = interp interpBas (escher2 2 Triangulo)
+    pic = interp interpBas (escher 5 Triangulo)
 }
