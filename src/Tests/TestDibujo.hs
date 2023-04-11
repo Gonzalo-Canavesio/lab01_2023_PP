@@ -1,11 +1,12 @@
 {-# LANGUAGE LambdaCase #-}
-module TestPred (
+module Tests.TestDibujo (
   tests
 ) where
 
-import Test.HUnit
-import Pred
 
-test1 = TestCase $ assertEqual "pred" (id 1) 1
+import Test.HUnit
+import Dibujo
+
+test1 = TestCase $ assertEqual "dibujo" (id 1) 1
 
 tests = TestList [test1]
