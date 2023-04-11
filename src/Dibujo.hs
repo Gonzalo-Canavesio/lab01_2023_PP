@@ -1,4 +1,5 @@
 {-# LANGUAGE LambdaCase #-}
+
 module Dibujo (
     Dibujo,
     figura, rotar, espejar, rot45, apilar, juntar, encimar,
@@ -9,55 +10,10 @@ module Dibujo (
     figuras
 ) where
 
-
-{-
---Gramática de las figuras:
-<Fig> ::= Figura <Bas> | Rotar <Fig> | Espejar <Fig> | Rot45 <Fig>
-    | Apilar <Float> <Float> <Fig> <Fig> 
-    | Juntar <Float> <Float> <Fig> <Fig> 
-    | Encimar <Fig> <Fig>
--}
-
-data Dibujo a = Figura a | Rotar (Dibujo a) | Espejar (Dibujo a) 
-    | Rot45 (Dibujo a)
-    | Apilar Float Float (Dibujo a) (Dibujo a) 
-    | Juntar Float Float (Dibujo a) (Dibujo a)
-    | Encimar (Dibujo a) (Dibujo a)
-    deriving (Eq, Show)
-
--- Agreguen los tipos y definan estas funciones
-
--- Construcción de dibujo. Abstraen los constructores.
-
-figura :: a -> Dibujo a
-figura = Figura
-
-rotar :: Dibujo a -> Dibujo a
-rotar = Rotar
-
-espejar :: Dibujo a -> Dibujo a
-espejar = Espejar
-
-rot45 :: Dibujo a -> Dibujo a
-rot45 = Rot45
-
-apilar :: Float  -> Float  -> Dibujo a -> Dibujo a -> Dibujo a
-apilar = Apilar
-
-juntar :: Float -> Float -> Dibujo a -> Dibujo a -> Dibujo a 
-juntar = Juntar
-
-encimar :: Dibujo a -> Dibujo a -> Dibujo a
-encimar = Encimar
-
--- Composición n-veces de una función con sí misma. Componer 0 veces
--- es la función constante, componer 1 vez es aplicar la función 1 vez, etc.
--- Componer negativamente es un error!
-comp :: (a -> a) -> Int -> a -> a
-comp f 0 a = a
-comp f n a | n > 0 =   f (comp f (n-1) a)
-           | otherwise = error "No se puede componer negativamente"
-
+-- Nos basamos en la siguiente respuesta de stack overflow: https://stackoverflow.com/a/14379426
+-- Y decidimos poner los miembros privados del modulo en Internals.Dibujo
+-- para poder testear comodamente sin perder la encapsulacion
+import Internals.Dibujo
 
 -- Rotaciones de múltiplos de 90.
 r180 :: Dibujo a -> Dibujo a
@@ -126,3 +82,4 @@ figuras = foldDib (:[]) id id id (\_ _ a b -> a ++ b) (\_ _ a b -> a ++ b) (++)
 -- id haciendo referencia a fRot, fEsp y fRot45 de foldDib, que cada vez que encuentra una rotacion, espejado o rotacion de 45, no hace nada.
 -- (\_ _ a b -> a ++ b) haciendo referencia a fApi y fJun de foldDib, que cada vez que encuentra una apilacion o una juntacion, concatena las listas de figuras de los dos dibujos
 -- (++) haciendo referencia a fEnc de foldDib, que cada vez que encuentra una encimacion, concatena las listas de figuras de los dos dibujos
+
