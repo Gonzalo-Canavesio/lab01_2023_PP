@@ -86,12 +86,12 @@ cuarteto a b c d = (.-.) ((///) a b) ((///) c d)
 
 -- Una figura repetida con las cuatro rotaciones, superpuestas.
 encimar4 :: Dibujo a -> Dibujo a 
-encimar4 a = (^^^) a ((^^^) (rotar a) ((^^^) (r180 a) (r270 a)))
+encimar4 a = (^^^) (r270 a) ((^^^) (r180 a) ((^^^) (rotar a) a))
 
 -- Cuadrado con la misma figura rotada i * 90, para i ∈ {0, ..., 3}.
 -- No confundir con encimar4!
 ciclar :: Dibujo a -> Dibujo a
-ciclar a =  (.-.) ((///) a (rotar a)) ((///) (r180 a) (r270 a))
+ciclar a =  cuarteto (rotar a) a (r180 a) (r270 a)
 
 -- Estructura general para la semántica (a no asustarse). Ayuda: 
 -- pensar en foldr y las definiciones de Floatro a la lógica
