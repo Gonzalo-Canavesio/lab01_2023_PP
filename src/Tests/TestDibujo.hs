@@ -48,7 +48,7 @@ testEncimar =
 testCuarteto = 
   TestCase $ assertEqual "Create cuarteto with four Dibujos" expected result
   where
-    expected = Apilar 2.0 2.0 (Juntar 1.0 1.0 testDibujo testDibujo) (Juntar 1.0 1.0 testDibujo testDibujo)
+    expected = Apilar 1.0 1.0 (Juntar 1.0 1.0 testDibujo testDibujo) (Juntar 1.0 1.0 testDibujo testDibujo)
     result = cuarteto testDibujo testDibujo testDibujo testDibujo
 
 -- Test that superimposing a Dibujo with its four rotations using encimar4 returns a Dibujo with the expected height and width
@@ -61,7 +61,7 @@ testEncimar4 =
 -- Test that creating a cyclic Dibujo with a Dibujo returns a Dibujo with the expected height and width
 testCiclar = TestCase $ assertEqual "Create cyclic Dibujo with a Dibujo" expected result
   where
-    expected = Apilar 2.0 2.0 (Juntar 1.0 1.0 (r270 testDibujo) testDibujo) (Juntar 1.0 1.0 (r180 testDibujo) (rotar testDibujo))
+    expected = Apilar 1.0 1.0 (Juntar 1.0 1.0 (rotar testDibujo) testDibujo) (Juntar 1.0 1.0 (r180 testDibujo) (r270 testDibujo))
     result = ciclar testDibujo
 
 tests = TestList [
