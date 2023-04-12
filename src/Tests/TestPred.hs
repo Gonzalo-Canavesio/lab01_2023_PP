@@ -7,49 +7,59 @@ import Test.HUnit
 import Pred
 import Dibujo
 
----- Test the cambiar function
---testCambiar :: Test
---testCambiar = TestList [
---    cambiar (\x -> x == 1) (\x -> cuadrado) [[1, 2], [3, 1]] ~?= [[cuadrado, 2], [3, cuadrado]],
---    cambiar (\x -> x == 'a') (\_ -> figura 'b') [['a', 'b'], ['a', 'c']] ~?= [['b', 'b'], ['b', 'c']]
---  ]
-
----- Test the anyDib function
---testAnyDib :: Test
---testAnyDib = TestList [
---    anyDib (\x -> x == 1) [[1, 2], [3, 4]] ~?= True,
---    anyDib (\x -> x == 'a') [['b', 'c'], ['d', 'e']] ~?= False,
---    anyDib (\x -> x == 0) [[1, 2], [3, 0]] ~?= True
---  ]
-
----- Test the allDib function
---testAllDib :: Test
---testAllDib = TestList [
---    allDib (\x -> x == 1) [[1, 1], [1, 1]] ~?= True,
---    allDib (\x -> x == 'a') [['a', 'a'], ['a', 'a']] ~?= True,
---    allDib (\x -> x == 0) [[1, 2], [3, 4]] ~?= False
---  ]
+-- funcion auxiliar de prueba, para simplificar las cosas representa un rectangulo con dos coordenadas
+-- la primera es la esquina inferior izquierda (left bottom)
+-- la segunda es la esquina superior derecha (right top)
+rectangulo :: (Num a, Ord a) => (a, a) -> (a, a) -> Dibujo ((a,a), (a,a))
+rectangulo lb rt = figura (lb, rt)
 
 -- Test the andP function
 testAndP :: Test
-testAndP = TestList [
-    andP (\x -> x > 0) (\x -> x < 10) 5 ~?= True,
-    andP (\x -> x > 0) (\x -> x < 10) 15 ~?= False
+testAndP = TestLabel "testAndP" $ TestList [
+    andP (> 0) (< 10) 5 ~?= True,
+    andP (> 0) (< 10) 15 ~?= False
   ]
 
 -- Test the orP function
 testOrP :: Test
-testOrP = TestList [
-    orP (\x -> x == 'a') (\x -> x == 'b') 'a' ~?= True,
-    orP (\x -> x == 'a') (\x -> x == 'b') 'c' ~?= False
+testOrP = TestLabel "testOrP" $ TestList [
+    orP (== 'a') (== 'b') 'a' ~?= True,
+    orP (== 'a') (== 'b') 'c' ~?= False
   ]
 
--- Combine all tests
+-- Test the cambiar function
+testCambiar :: Test
+testCambiar = TestLabel "testCambiar" $ TestList [
+    cambiar (const True) (\_ -> rectangulo (0, 0) (2, 2)) (rectangulo (0, 0) (1, 1)) ~?= rectangulo (0, 0) (2, 2),
+    cambiar (const False) (\_ -> rectangulo (0, 0) (1, 1)) (rectangulo (0, 0) (1, 1)) ~?= rectangulo (0, 0) (1, 1),
+    cambiar (\(lb, rt) -> lb == (0,0)) (\_ -> rectangulo (1, 1) (2, 2)) (rectangulo (0, 0) (1, 1)) ~?= rectangulo (1, 1) (2, 2),
+    cambiar (\(lb, rt) -> rt == (1,1)) (\_ -> rectangulo (2, 2) (3, 3)) (rectangulo (0, 0) (1, 1)) ~?= rectangulo (2, 2) (3, 3)
+  ]
+
+-- Test the anyDib function
+testAnyDib :: Test
+testAnyDib = TestLabel "testAnyDib" $ TestList [
+    anyDib (const True) (rectangulo (0, 0) (1, 1)) ~?= True,
+    anyDib (const False) (rectangulo (0, 0) (1, 1)) ~?= False,
+    anyDib (\(lb, rt) -> lb == (0,0)) (rectangulo (0, 0) (1, 1)) ~?= True,
+    anyDib (\(lb, rt) -> lb == (1,1)) (rectangulo (0, 0) (1, 1)) ~?= False
+  ]
+
+-- Test the allDib function
+testAllDib :: Test
+testAllDib = TestLabel "testAllDib" $ TestList [
+    allDib (const True) (rectangulo (0, 0) (1, 1)) ~?= True,
+    allDib (const False) (rectangulo (0, 0) (1, 1)) ~?= False,
+    allDib (\(lb, rt) -> lb == (0,0)) (rectangulo (0, 0) (1, 1)) ~?= True,
+    allDib (\(lb, rt) -> lb == (1,1)) (rectangulo (0, 0) (1, 1)) ~?= False
+  ]
+
+-- Combine all tests into a single test list
+tests :: Test
 tests = TestList [
-    --testCambiar
-    --testAnyDib
-    --,testAllDib
-    testAndP
+    testCambiar
+    ,testAnyDib
+    ,testAllDib
+    ,testAndP
     ,testOrP
-  ]
-
+    ]
