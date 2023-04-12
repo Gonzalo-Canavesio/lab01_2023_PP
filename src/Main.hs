@@ -11,21 +11,55 @@ import Dibujos.Feo (feoConf)
 import Dibujos.Escher (escherConf)
 import Dibujos.Grilla (grillaConf)
 
+data Flag = Lista deriving Eq
+
+imgSize = 400
+
+options :: [OptDescr Flag]
+options = [ 
+  Option ['l'] ["lista"] (NoArg Lista) "Lista los nombres de los dibujos disponibles"
+  ]
+
 -- Lista de configuraciones de los dibujos
 configs :: [Conf]
 configs = [ejemploConf, feoConf, escherConf, grillaConf]
 
+
+showDibujos :: IO ()
+showDibujos = do
+        putStrLn "Dibujos disponibles:"
+        mapM_ (\(index, config) -> putStrLn $ show index ++ ". " ++ name config) $ zip [1..] configs
+        putStrLn "Escriba el indice del dibujo que quiera mostrar: "
+
+executeConfigFromIndex :: [Conf] -> Int -> IO ()
+executeConfigFromIndex configs index = do
+  if index < length configs
+    then 
+      initial (configs !! index) imgSize
+    else 
+      error "El indice no existe!"
+
+handleListaFlag :: IO ()
+handleListaFlag = do
+        showDibujos
+        dibIndex <- getLine
+        executeConfigFromIndex configs $ read dibIndex - 1
+
 -- Dibuja el dibujo n
-initial' :: [Conf] -> String -> IO ()
-initial' [] n = do
+findAndExecuteConfig :: [Conf] -> String -> IO ()
+findAndExecuteConfig [] n = do
     putStrLn $ "No hay un dibujo llamado " ++ n
-initial' (c : cs) n = 
-    if n == name c then
-        initial c 400
+findAndExecuteConfig (c : cs) input = 
+    if input == name c then
+        initial c imgSize
     else
-        initial' cs n
+        findAndExecuteConfig cs input
 
 main :: IO ()
 main = do
     args <- getArgs
-    initial' configs $ head args
+    let (flags, _, _) = getOpt Permute options args
+    if Lista `elem` flags 
+      then handleListaFlag
+      else findAndExecuteConfig configs $ head args
+
