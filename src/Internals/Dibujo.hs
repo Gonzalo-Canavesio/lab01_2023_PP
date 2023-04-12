@@ -23,7 +23,9 @@ figura :: a -> Dibujo a
 figura = Figura
 
 rotar :: Dibujo a -> Dibujo a
-rotar = Rotar
+rotar d = case d of
+  Rotar (Rotar (Rotar a)) -> a
+  _ -> Rotar d
 
 espejar :: Dibujo a -> Dibujo a
 espejar = Espejar
