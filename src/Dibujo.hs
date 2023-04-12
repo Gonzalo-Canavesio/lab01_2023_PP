@@ -36,13 +36,13 @@ r270 = comp rotar 3
 
 -- Dadas cuatro figuras las ubica en los cuatro cuadrantes.
 cuarteto :: Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a
-cuarteto a b c d = (.-.) ((///) a b) ((///) c d)  
+cuarteto a b c d = ( a /// b) .-. (c /// d)  
 -- Junto a las figuras a y b en la parte de arriba donde a está a la izquierda y b a la derecha.
 -- Junto a las figuras c y d en la parte de abajo donde c está a la izquierda y d a la derecha.
 
 -- Una figura repetida con las cuatro rotaciones, superpuestas.
 encimar4 :: Dibujo a -> Dibujo a 
-encimar4 a = (^^^) (r270 a) ((^^^) (r180 a) ((^^^) (rotar a) a))
+encimar4 a = r270 a ^^^ (r180 a ^^^ ( rotar a ^^^ a))
 
 -- Cuadrado con la misma figura rotada i * 90, para i ∈ {0, ..., 3}.
 -- No confundir con encimar4!
