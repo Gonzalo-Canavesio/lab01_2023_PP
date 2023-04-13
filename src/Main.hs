@@ -12,6 +12,7 @@ import Dibujos.Escher (escherConf)
 import Dibujos.Grilla (grillaConf)
 import Dibujos.Escher2 (escher2Conf)
 import Dibujos.EscherEfe (escherEfeConf)
+import Dibujos.Aureo (aureoConf)
 
 data Flag = Lista deriving Eq
 
@@ -24,7 +25,7 @@ options = [
 
 -- Lista de configuraciones de los dibujos
 configs :: [Conf]
-configs = [ejemploConf, feoConf, escherConf, grillaConf, escher2Conf, escherEfeConf]
+configs = [ejemploConf, feoConf, escherConf, grillaConf, escher2Conf, escherEfeConf, aureoConf]
 
 
 showDibujos :: IO ()

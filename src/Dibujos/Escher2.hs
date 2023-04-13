@@ -11,7 +11,7 @@ import Dibujo (Dibujo, figura, juntar, apilar, rot45, rotar, encimar, espejar, r
 import FloatingPic (Output, half, zero, vacia)
 import Interp (Conf(..), interp)
 
-data Basica = Triangulo | Vacia | Efe
+data Basica = Triangulo | Vacia
     deriving (Show, Eq)
 
 type Escher = Basica
