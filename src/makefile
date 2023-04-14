@@ -1,4 +1,4 @@
-GHCICMD = stack repl
+GHCICMD = ghci
 TESTDIR = Tests
 
 .PHONY: test
@@ -12,3 +12,11 @@ esch:
 .PHONY: gri
 gri: 
 	echo ":main Grilla" | $(GHCICMD) Main.hs
+
+.PHONY: aureo
+aureo: 
+	echo ":main Aureo" | $(GHCICMD) Main.hs	
+
+.PHONY: sier
+sier: 
+	echo ":main Sierpinski" | $(GHCICMD) Main.hs	
