@@ -13,10 +13,12 @@ Hay varias razones/beneficios para separar las funcionalidades en distintos mód
 
 #### Explicar detalladamente la responsabilidad de cada módulo
 
-- **Dibujo**: Implementar la sintaxis del lenguaje. Esto significa definir el tipo de datos `Dibujo` y las funciones que permiten construir, modificar y trabajar con los dibujos.
+- **Internals/Dibujo**: Implementar la sintaxis del lenguaje. Esto significa definir el tipo de datos `Dibujo` y las funciones que permiten construir, modificar y trabajar con los dibujos.
+- **Dibujo**:
 - **Pred**: Extender la sintaxis del lenguaje para poder trabajar con predicados sobre los dibujos.
 - **Interp**: Implementar la semántica del lenguaje. Esto significa tomar un dibujo y devolver su interpretación, en este caso mediante el uso de la biblioteca de gráficos Gloss (Se interpreta como un grafico bi-dimensional usando vectores).
-- **Dibujos/Feo**: Implementar la semántica/interpretación de las figuras básicas usadas en el dibujo "Feo" del enunciado.
+- **FloatingPic**:
+- **Grilla**:
 - **Dibujos/Escher**: Implementar la semántica/interpretación de las figuras básicas usadas en el dibujo "Escher", definición de combinadores y generación del dibujo de Escher.
 - **Main**: Solicitar al usuario que ingrese el nombre de un dibujo y mostrar el resultado de interpretar el dibujo ingresado (si es que existe).
 
@@ -51,6 +53,12 @@ anyDib p (Encimar d1 d2) = anyDib p d1 || anyDib p d2
 Si no hubiesemos implementado `foldDib` hubiese sido necesario utilizar pattern-matching y aquellas funciones donde se lo utiliza hubiesen tenido (cómo mínimo) 7 lineas de código, lo cual hubiese hecho el código menos legible y más complejo de entender.
 
 Sin embargo, existen casos en los que utilizar una función de `fold` sobre hacer pattern-matching directo no es conveniente ya que el código puede llegar a ser más complejo y menos legible (Por ejemplo, si queremos detectar si dos figuras que fueron apiladas están ambas inmediatamente rotadas 45 grados). Además, para programadores novatos que no están familiarizados con el concepto de `fold` puede ser más difícil de entender y preferirían una implementación usando pattern-matching. Cada enfoque tiene sus pros y sus contras y depende de la situación y del programador elegir una estrategia u otra.
+
+## Decisiones de diseño y detalles de implementación 
+
+- Meter dibujo en internal
+- Como hicimos el punto estrella de las proporciones
+COMPLETAR
 
 ## Nuestra experiencia con el laboratorio
 
