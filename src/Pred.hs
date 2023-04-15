@@ -16,11 +16,11 @@ cambiar p f = mapDib(\x -> if p x then f x else figura x)
 
 -- Alguna básica satisface el predicado.
 anyDib :: Pred a -> Dibujo a -> Bool
-anyDib p = foldDib p id id id (\_ _ x y -> x || y) (\_ _ x y -> x || y) (||)
+anyDib p = foldDib p id id id (\_ _ x y -> x || y) (\_ _ x y -> x || y) (||) (\_ _ x -> x)
 
 -- Todas las básicas satisfacen el predicado.
 allDib :: Pred a -> Dibujo a -> Bool
-allDib p = foldDib p id id id (\_ _ x y -> x && y) (\_ _ x y -> x && y) (&&)
+allDib p = foldDib p id id id (\_ _ x y -> x && y) (\_ _ x y -> x && y) (&&) (\_ _ x -> x)
 
 -- Los dos predicados se cumplen para el elemento recibido.
 andP :: Pred a -> Pred a -> Pred a

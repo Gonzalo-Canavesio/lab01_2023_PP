@@ -24,8 +24,8 @@ interpBas :: Output Aurea
 interpBas RectanguloConDiagonal x y w = pictures [line rectangulo, line (cuartoCircunferencia x y w)]
     where 
         rectangulo = [x, x V.+ y, x V.+ y V.+ w, x V.+ w, x]
-        cuartoCircunferencia x y w = map (\i -> ((fst i) V.* y) V.+ (snd i V.* w) V.+ x) (puntos)
-        puntos = map ((1,0) V.+) [((-1) * sin(i*pi/100), cos(i*pi/100)) | i <- [0..49]]
+        cuartoCircunferencia x y w = map (\i -> (fst i V.* y) V.+ (snd i V.* w) V.+ x) puntos
+        puntos = [(1,0) V.+ ((-1) * sin(i*pi/100), cos(i*pi/100)) | i <- [0..49]]
 
 
 interpBas Vacia x y w = vacia x y w
