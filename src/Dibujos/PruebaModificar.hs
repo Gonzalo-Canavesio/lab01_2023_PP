@@ -1,13 +1,13 @@
 module Dibujos.PruebaModificar(
     interpBas,
-    pruebamodificarConf
+    pruebaModificarConf
 ) where
 -- Prueba de modificar en base al dibujo ejemplo
 import Graphics.Gloss (blank, pictures, line, polygon)
 
 import qualified Graphics.Gloss.Data.Point.Arithmetic as V
 
-import Dibujo (Dibujo, figura, juntar, modificar ,apilar )
+import Dibujo (Dibujo, figura, juntar, modificar ,apilar, encimar )
 import FloatingPic (Output, half, zero)
 import Interp (Conf(..), interp)
 
@@ -17,13 +17,14 @@ ejemplo :: Dibujo Basica
 ejemplo = figura ()
 
 interpBas :: Output Basica
-interpBas () a b c = pictures [line $ triangulo a b c, cara a b c]
-  where
-      triangulo a b c = map (a V.+) [zero, c, b, zero]
-      cara a b c = polygon $ triangulo (a V.+ half c) (half b) (half c)
+interpBas () x y w = line . map (x V.+) $ [0.1 V.* w V.+ 0.27 V.* y, 0.1 V.* w V.+ 0.73 V.* y, y V.+ half w, 0.9 V.* w V.+ 0.73 V.* y, 0.9 V.* w V.+ 0.27 V.* y, half w, 0.1 V.* w V.+ 0.27 V.* y]
 
-pruebamodificarConf :: Conf
-pruebamodificarConf = Conf {
+usoModificar :: Int -> Dibujo Basica
+usoModificar 1 = figura ()
+usoModificar n = encimar (figura ()) (modificar 0.9 0.9 (usoModificar (n-1)))
+
+pruebaModificarConf :: Conf
+pruebaModificarConf = Conf {
     name = "PruebaModificar",
-    pic = interp interpBas (modificar 1.5 1.5 ejemplo)
+    pic = interp interpBas (modificar 2 2 (usoModificar 500))
 }

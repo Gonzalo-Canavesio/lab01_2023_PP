@@ -20,3 +20,7 @@ aureo:
 .PHONY: sier
 sier: 
 	echo ":main Sierpinski" | $(GHCICMD) Main.hs	
+
+.PHONY: mod
+mod: 
+	echo ":main PruebaModificar" | $(GHCICMD) Main.hs	

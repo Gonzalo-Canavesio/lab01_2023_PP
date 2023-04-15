@@ -21,7 +21,11 @@ interpRotar :: FloatingPic -> FloatingPic
 interpRotar f x w h = f (x V.+ w) h (V.negate w)
 
 interpModificar :: Float -> Float -> FloatingPic -> FloatingPic
-interpModificar n m f x w h = f x (n V.* w) (m V.* h)
+interpModificar n m f x w h = f x' w' h'
+    where x' = x V.- (half (w' V.- w) V.+ half (h' V.- h))
+          w' = n V.* w
+          h' = m V.* h
+
 
 interpRot45 :: FloatingPic -> FloatingPic
 interpRot45 f x w h = f (x V.+ half (w V.+ h)) (half (w V.+ h)) (half (h V.- w))
