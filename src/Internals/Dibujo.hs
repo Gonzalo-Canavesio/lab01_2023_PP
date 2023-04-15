@@ -7,9 +7,10 @@ module Internals.Dibujo where
     | Juntar <Float> <Float> <Fig> <Fig> 
     | Encimar <Fig> <Fig>
 -}
-
+--Agregado al lenguaje un operador para permitir modificar las proporciones de un dibujo.
 data Dibujo a = Figura a | Rotar (Dibujo a) | Espejar (Dibujo a) 
     | Rot45 (Dibujo a)
+    | Modificar Float Float (Dibujo a)
     | Apilar Float Float (Dibujo a) (Dibujo a) 
     | Juntar Float Float (Dibujo a) (Dibujo a)
     | Encimar (Dibujo a) (Dibujo a)
@@ -18,7 +19,6 @@ data Dibujo a = Figura a | Rotar (Dibujo a) | Espejar (Dibujo a)
 -- Agreguen los tipos y definan estas funciones
 
 -- Construcción de dibujo. Abstraen los constructores.
-
 figura :: a -> Dibujo a
 figura = Figura
 
@@ -27,13 +27,16 @@ rotar d = case d of
   Rotar (Rotar (Rotar a)) -> a
   _ -> Rotar d
 
+modificar :: Float -> Float -> Dibujo a -> Dibujo a
+modificar = Modificar
+
 espejar :: Dibujo a -> Dibujo a
 espejar = Espejar
 
 rot45 :: Dibujo a -> Dibujo a
 rot45 = Rot45
 
-apilar :: Float  -> Float  -> Dibujo a -> Dibujo a -> Dibujo a
+apilar :: Float -> Float -> Dibujo a -> Dibujo a -> Dibujo a
 apilar = Apilar
 
 juntar :: Float -> Float -> Dibujo a -> Dibujo a -> Dibujo a 

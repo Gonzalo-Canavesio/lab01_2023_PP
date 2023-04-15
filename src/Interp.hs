@@ -12,11 +12,16 @@ import qualified Graphics.Gloss.Data.Point.Arithmetic as V -- Agregamos esta lin
 
 -- Interpretación de un dibujo
 -- formulas sacadas del enunciado
+--Agregan al lenguaje un operador para permitir modificar las proporciones de un dibujo.
+
 interp :: Output a -> Output (Dibujo a)
-interp interpBasica = foldDib interpBasica interpRotar interpEspejar interpRot45 interpApilar interpJuntar interpEncimar
+interp interpBasica = foldDib interpBasica interpRotar interpEspejar interpRot45 interpApilar interpJuntar interpEncimar interpModificar
 
 interpRotar :: FloatingPic -> FloatingPic
 interpRotar f x w h = f (x V.+ w) h (V.negate w)
+
+interpModificar :: Float -> Float -> FloatingPic -> FloatingPic
+interpModificar n m f x w h = f x (n V.* w) (m V.* h)
 
 interpRot45 :: FloatingPic -> FloatingPic
 interpRot45 f x w h = f (x V.+ half (w V.+ h)) (half (w V.+ h)) (half (h V.- w))
