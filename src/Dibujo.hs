@@ -37,7 +37,7 @@ cuarteto a b c d = ( a /// b) .-. (c /// d)
 
 -- Una figura repetida con las cuatro rotaciones, superpuestas.
 encimar4 :: Dibujo a -> Dibujo a 
-encimar4 a = (a ^^^ rotar a) ^^^ (r180 a ^^^ r270 a)
+encimar4 a = a ^^^ (rotar a ^^^ (r180 a ^^^ r270 a))
 
 -- Cuadrado con la misma figura rotada i * 90, para i ∈ {0, ..., 3}.
 -- No confundir con encimar4!

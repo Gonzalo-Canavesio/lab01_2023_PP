@@ -7,9 +7,10 @@ import Test.HUnit
 import Pred
 import Dibujo
 
--- funcion auxiliar de prueba, para simplificar las cosas representa un rectangulo con dos coordenadas
--- la primera es la esquina inferior izquierda (left bottom)
--- la segunda es la esquina superior derecha (right top)
+-- Funcion auxiliar de prueba, para simplificar las cosas representa 
+-- un rectangulo con dos coordenadas
+-- La primera es la esquina inferior izquierda (left bottom)
+-- La segunda es la esquina superior derecha (right top)
 rectangulo :: (Num a, Ord a) => (a, a) -> (a, a) -> Dibujo ((a,a), (a,a))
 rectangulo lb rt = figura (lb, rt)
 
@@ -30,11 +31,12 @@ testOrP = TestLabel "testOrP" $ TestList [
 -- Test the cambiar function
 testCambiar :: Test
 testCambiar = TestLabel "testCambiar" $ TestList [
-    cambiar (const True) (\_ -> rectangulo (0, 0) (2, 2)) (rectangulo (0, 0) (1, 1)) ~?= rectangulo (0, 0) (2, 2),
-    cambiar (const False) (\_ -> rectangulo (0, 0) (1, 1)) (rectangulo (0, 0) (1, 1)) ~?= rectangulo (0, 0) (1, 1),
-    cambiar (\(lb, rt) -> lb == (0,0)) (\_ -> rectangulo (1, 1) (2, 2)) (rectangulo (0, 0) (1, 1)) ~?= rectangulo (1, 1) (2, 2),
-    cambiar (\(lb, rt) -> rt == (1,1)) (\_ -> rectangulo (2, 2) (3, 3)) (rectangulo (0, 0) (1, 1)) ~?= rectangulo (2, 2) (3, 3)
+    cambiar (const True) (\_ -> r (0, 0) (2, 2)) (r (0, 0) (1, 1)) ~?= r (0, 0) (2, 2),
+    cambiar (const False) (\_ -> r (0, 0) (1, 1)) (r (0, 0) (1, 1)) ~?= r (0, 0) (1, 1),
+    cambiar (\(lb, rt) -> lb == (0,0)) (\_ -> r (1, 1) (2, 2)) (r (0, 0) (1, 1)) ~?= r (1, 1) (2, 2),
+    cambiar (\(lb, rt) -> rt == (1,1)) (\_ -> r (2, 2) (3, 3)) (r (0, 0) (1, 1)) ~?= r (2, 2) (3, 3)
   ]
+  where r = rectangulo
 
 -- Test the anyDib function
 testAnyDib :: Test
