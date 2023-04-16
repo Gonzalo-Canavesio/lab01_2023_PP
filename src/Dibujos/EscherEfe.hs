@@ -74,5 +74,5 @@ interpBas Triangulo x y w = pictures [line $ triangulo x y w, cara x y w]
 escherEfeConf :: Conf
 escherEfeConf = Conf {
     name = "EscherEfe",
-    pic = interp interpBas (escher 5 Efe)
+    pic = \t -> interp interpBas (escher (floor t `mod` 8 +1) Efe)
 }

@@ -25,5 +25,5 @@ interpBas () a b c = pictures [line $ triangulo a b c, cara a b c]
 ejemploConf :: Conf
 ejemploConf = Conf {
     name = "Ejemplo",
-    pic = interp interpBas ejemplo
+    pic = \t -> interp interpBas ejemplo
 }

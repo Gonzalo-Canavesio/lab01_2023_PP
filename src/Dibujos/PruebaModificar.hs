@@ -26,5 +26,5 @@ usoModificar n = encimar (figura ()) (modificar 0.9 0.9 (usoModificar (n-1)))
 pruebaModificarConf :: Conf
 pruebaModificarConf = Conf {
     name = "PruebaModificar",
-    pic = interp interpBas (modificar 2 2 (usoModificar 500))
+    pic = \ t -> interp interpBas (modificar 2 2 (usoModificar ( round (t*2+1))))
 }

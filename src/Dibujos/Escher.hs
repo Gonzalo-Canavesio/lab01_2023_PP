@@ -62,5 +62,5 @@ interpBas Triangulo x y w = pictures [line $ triangulo x y w, cara x y w]
 escherConf :: Conf
 escherConf = Conf {
     name = "Escher",
-    pic = interp interpBas (escher 5 Triangulo)
+    pic = \t -> interp interpBas (escher (floor t `mod` 8 +1) Triangulo)
 }

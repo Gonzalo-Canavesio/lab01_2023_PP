@@ -33,5 +33,5 @@ interpBas Vacia x y w = vacia x y w
 aureoConf :: Conf
 aureoConf = Conf {
     name = "Aureo",
-    pic = interp interpBas (apilar 1.6180339887 1 (figura Vacia) (proporcion 20 (figura RectanguloConDiagonal)))
+    pic = \t -> interp interpBas (apilar 1.6180339887 1 (figura Vacia) (proporcion (floor t+1) (figura RectanguloConDiagonal)))
 }

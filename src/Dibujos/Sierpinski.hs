@@ -28,5 +28,5 @@ interpBas Vacia x y w = vacia x y w
 sierpinskiConf :: Conf
 sierpinskiConf = Conf {
     name = "Sierpinski",
-    pic = interp interpBas (sierp 8 Triangulo)
+    pic = \t -> interp interpBas (sierp (1+(floor t `mod` 10)) Triangulo)
 }

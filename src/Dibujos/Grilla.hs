@@ -30,5 +30,5 @@ grillaConf :: Conf
 grillaConf =
   Conf
     { name = "Grilla",
-      pic = interp interpBas drawGrid
+      pic = \t -> interp interpBas drawGrid
     }
