@@ -64,6 +64,37 @@ testCiclar = TestCase $ assertEqual "Create cyclic Dibujo with a Dibujo" expecte
     expected = Apilar 1.0 1.0 (Juntar 1.0 1.0 (rotar testDibujo) testDibujo) (Juntar 1.0 1.0 (r180 testDibujo) (r270 testDibujo))
     result = ciclar testDibujo
 
+testfoldDib1 = TestCase $ assertEqual "Test foldDib" expected result
+  where
+    expected = 1
+    result = foldDib (\_ -> 1) id id id (\_ _ x y -> x+y) (\_ _ x y -> x+y) (+) (\_ _ x -> x) testDibujo
+
+testfoldDib2 = TestCase $ assertEqual "Correct application of foldDib on a drawing" expected result
+  where
+    expected = 2
+    result = foldDib (\_ -> 1) id id id (\_ _ x y -> x+y) (\_ _ x y -> x+y) (+) (\_ _ x -> x) (testDibujo .-. testDibujo)
+
+testfoldDib3 = TestCase $ assertEqual "Transformations applied to a drawing of overlapping two copies of the same one" expected result
+  where
+    expected = 3
+    result = foldDib (\_ -> 1) id id id (\_ _ x y -> x+y) (\_ _ x y -> x+y) (+) (\_ _ x -> x) (Encimar testDibujo testDibujo)
+
+testmapDib1 = TestCase $ assertEqual "Test mapDib" expected result
+  where
+    expected = testDibujo
+    result = mapDib (\_ -> testDibujo) testDibujo
+
+testmapDib2  = TestCase $ assertEqual "Two copies of a drawing stacked on top of each other" expected result
+  where
+    expected = Apilar 1.0 1.0 testDibujo testDibujo
+    result = mapDib (\_ -> testDibujo) (testDibujo .-. testDibujo)   
+
+testmapDib3 = TestCase $ assertEqual "Correct transformation to each drawing of a list, and then a combination of those" expected result
+  where
+    expected = Apilar 1.0 1.0 (Juntar 1.0 1.0 (rotar testDibujo) testDibujo) (Juntar 1.0 1.0 (r180 testDibujo) (r270 testDibujo))
+    result = mapDib (\_ -> testDibujo) (ciclar testDibujo)
+
+
 tests = TestList [
    testRot180
   ,testRot270
@@ -73,4 +104,9 @@ tests = TestList [
   ,testCuarteto
   ,testEncimar4
   ,testCiclar
+  ,testfoldDib1
+  ,testfoldDib2
+  ,testmapDib1
+  ,testmapDib2
+  ,testmapDib3
   ]
