@@ -5,7 +5,7 @@ module Interp (
     initial
 ) where
 
-import Graphics.Gloss(Picture, Display(InWindow), makeColorI, color, pictures, translate, white, display)
+import Graphics.Gloss(Picture, Display(InWindow), makeColorI, color, pictures, translate, white, display, animate)
 import Dibujo (Dibujo, foldDib)
 import FloatingPic (FloatingPic, Output, grid, half) -- Agregamos el half para utilizarlo en InterpRot45
 import qualified Graphics.Gloss.Data.Point.Arithmetic as V -- Agregamos esta linea para poder utilizar operadores de vectores
@@ -51,11 +51,11 @@ interpEncimar f g x w h = pictures[f x w h, g x w h]
 -- Configuración de la interpretación
 data Conf = Conf {
         name :: String,
-        pic :: FloatingPic
+        pic :: Float -> FloatingPic
     }
 
-interpConf :: Conf -> Float -> Float -> Picture 
-interpConf (Conf _ p) x y = p (0, 0) (x,0) (0,y)
+interpConf :: Conf -> Float -> Float -> Float -> Picture 
+interpConf (Conf _ p) t x y = p t (0, 0) (x,0) (0,y)
 
 -- Dada una computación que construye una configuración, mostramos por
 -- pantalla la figura de la misma de acuerdo a la interpretación para
@@ -65,6 +65,6 @@ initial :: Conf -> Float -> IO ()
 initial cfg size = do
     let n = name cfg
         win = InWindow n (ceiling size, ceiling size) (0, 0)
-    display win white $ withGrid (interpConf cfg size size) size size
+    animate win white (\t -> withGrid (interpConf cfg t size size) size size)
   where withGrid p x y = translate (-size/2) (-size/2) $ pictures [p, color grey $ grid (ceiling $ size / 10) (0, 0) x 10]
         grey = makeColorI 120 120 120 120
