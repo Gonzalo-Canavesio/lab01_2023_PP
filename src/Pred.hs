@@ -11,16 +11,16 @@ type Pred a = a -> Bool
 -- el predicado por la figura básica indicada por el segundo argumento.
 cambiar :: Pred a -> (a -> Dibujo a) -> Dibujo a -> Dibujo a
 cambiar p f = mapDib(\x -> if p x then f x else figura x)
--- Para esta funcion utilizamos la funcion mapdib donde utilizamos una funcion lambda
--- que chequea si el predicado se cumple para la figura basica, si se cumple se aplica la funcion f en caso contrario se devuelve la figura basica
 
 -- Alguna básica satisface el predicado.
 anyDib :: Pred a -> Dibujo a -> Bool
-anyDib p = foldDib p id id id (\_ _ x y -> x || y) (\_ _ x y -> x || y) (||) (\_ _ x -> x)
+anyDib p = foldDib p id id id (\_ _ x y -> x || y) (\_ _ x y -> x || y) (||) 
+                  (\_ _ x -> x)
 
 -- Todas las básicas satisfacen el predicado.
 allDib :: Pred a -> Dibujo a -> Bool
-allDib p = foldDib p id id id (\_ _ x y -> x && y) (\_ _ x y -> x && y) (&&) (\_ _ x -> x)
+allDib p = foldDib p id id id (\_ _ x y -> x && y) (\_ _ x y -> x && y) (&&)
+                   (\_ _ x -> x)
 
 -- Los dos predicados se cumplen para el elemento recibido.
 andP :: Pred a -> Pred a -> Pred a

@@ -27,13 +27,15 @@ options = [
 
 -- Lista de configuraciones de los dibujos
 configs :: [Conf]
-configs = [ejemploConf, feoConf, escherConf, grillaConf, escher2Conf, escherEfeConf, aureoConf, pruebaModificarConf, sierpinskiConf]
+configs = [ejemploConf, feoConf, escherConf, grillaConf, escher2Conf, 
+          escherEfeConf, aureoConf, pruebaModificarConf, sierpinskiConf]
 
 
 showDibujos :: IO ()
 showDibujos = do
         putStrLn "Dibujos disponibles:"
-        mapM_ (\(index, config) -> putStrLn $ show index ++ ". " ++ name config) $ zip [1..] configs
+        mapM_ (\(index, config) -> putStrLn $ show index ++ ". " ++ name config) 
+                                   $ zip [1..] configs
         putStrLn "Escriba el indice del dibujo que quiera mostrar: "
 
 executeConfigFromIndex :: [Conf] -> Int -> IO ()

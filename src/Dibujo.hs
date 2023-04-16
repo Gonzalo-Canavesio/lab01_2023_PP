@@ -10,9 +10,6 @@ module Dibujo (
     figuras
 ) where
 
--- Nos basamos en la siguiente respuesta de stack overflow: https://stackoverflow.com/a/14379426
--- Y decidimos poner los miembros privados del modulo en Internals.Dibujo
--- para poder testear comodamente sin perder la encapsulacion
 import Internals.Dibujo
 
 -- Rotaciones de múltiplos de 90.
@@ -37,12 +34,10 @@ r270 = comp rotar 3
 -- Dadas cuatro figuras las ubica en los cuatro cuadrantes.
 cuarteto :: Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a -> Dibujo a
 cuarteto a b c d = ( a /// b) .-. (c /// d)  
--- Junto a las figuras a y b en la parte de arriba donde a está a la izquierda y b a la derecha.
--- Junto a las figuras c y d en la parte de abajo donde c está a la izquierda y d a la derecha.
 
 -- Una figura repetida con las cuatro rotaciones, superpuestas.
 encimar4 :: Dibujo a -> Dibujo a 
-encimar4 a = r270 a ^^^ (r180 a ^^^ ( rotar a ^^^ a))
+encimar4 a = (a ^^^ rotar a) ^^^ (r180 a ^^^ r270 a)
 
 -- Cuadrado con la misma figura rotada i * 90, para i ∈ {0, ..., 3}.
 -- No confundir con encimar4!
@@ -56,15 +51,19 @@ foldDib :: (a -> b) -> (b -> b) -> (b -> b) -> (b -> b) ->
        (Float -> Float -> b -> b -> b) -> 
        (b -> b -> b) -> (Float -> Float -> b -> b) ->
        Dibujo a -> b
-foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod (Figura d) = fFig d -- si d es una figura, aplico fFig a d
-foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod (Rotar d) = fRot (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d)  -- Si d es una rotacion, aplico foldDib a d para obtener el dibujo y aplico fRot a ese dibujo
-foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod (Espejar d) = fEsp (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d) -- lo mismo que rotar
-foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod (Rot45 d) = fRot45 (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d) -- lo mismo que rotar
-foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod (Apilar x y d1 d2) = fApi x y (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d1) (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d2) -- si d es una apilacion, aplico foldDib a d1 y d2 para obtener los dibujos y aplico fApi a esos dibujos
-foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod (Juntar x y d1 d2) = fJun x y (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d1) (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d2) -- lo mismo que apilar
-foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod (Encimar d1 d2) = fEnc (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d1) (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d2) -- si d es una encimacion, aplico foldDib a d1 y d2 para obtener los dibujos y aplico fEnc a esos dibujos
-foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod (Modificar x y d) = fMod x y (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d) -- si d es una modificacion, aplico foldDib a d para obtener el dibujo y aplico fmod a ese dibujo
-
+foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d =
+    case d of
+        Figura a -> fFig a
+        Rotar d -> fRot (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d)
+        Espejar d -> fEsp (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d)
+        Rot45 d -> fRot45 (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d)
+        Apilar x y d1 d2 -> fApi x y (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d1) 
+                                     (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d2)
+        Juntar x y d1 d2 -> fJun x y (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d1) 
+                                     (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d2)
+        Encimar d1 d2 -> fEnc (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d1) 
+                              (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d2)
+        Modificar x y d -> fMod x y (foldDib fFig fRot fEsp fRot45 fApi fJun fEnc fMod d)
 
 -- Demostrar que `mapDib figura = id`
 mapDib :: (a -> Dibujo b) -> Dibujo a -> Dibujo b
@@ -79,9 +78,5 @@ mapDib f (Modificar x y d) = Modificar x y (mapDib f d)
 
 -- Junta todas las figuras básicas de un dibujo.
 figuras :: Dibujo a -> [a]
-figuras = foldDib (:[]) id id id (\_ _ a b -> a ++ b) (\_ _ a b -> a ++ b) (++) (\_ _ a -> a)
--- (:[])  haciendo referencia a fFig de foldDib, que cada vez que encuentra una figura, la agrega a una lista con solo esa figura
--- id haciendo referencia a fRot, fEsp y fRot45 de foldDib, que cada vez que encuentra una rotacion, espejado o rotacion de 45, no hace nada.
--- (\_ _ a b -> a ++ b) haciendo referencia a fApi y fJun de foldDib, que cada vez que encuentra una apilacion o una juntacion, concatena las listas de figuras de los dos dibujos
--- (++) haciendo referencia a fEnc de foldDib, que cada vez que encuentra una encimacion, concatena las listas de figuras de los dos dibujos
-
+figuras = foldDib (:[]) id id id (\_ _ a b -> a ++ b) (\_ _ a b -> a ++ b) (++) 
+                  (\_ _ a -> a)

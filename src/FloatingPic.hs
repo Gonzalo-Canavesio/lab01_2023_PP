@@ -6,7 +6,7 @@ module FloatingPic (
 ) where
     
 import Graphics.Gloss
-    (Vector, Picture, blank, line, pictures, rotate, scale, translate)
+    (Vector, Picture, blank, line, pictures, rotate, translate)
 import Graphics.Gloss.Data.Vector (argV, magV)
 import Graphics.Gloss.Geometry.Angle (radToDeg)
 

@@ -7,24 +7,28 @@ import Graphics.Gloss (blank, pictures, line, polygon)
 
 import qualified Graphics.Gloss.Data.Point.Arithmetic as V
 
-import Dibujo (Dibujo, figura, juntar, modificar ,apilar, encimar )
-import FloatingPic (Output, half, zero)
+import Dibujo (Dibujo, figura, modificar, (^^^))
+import FloatingPic (Output, half)
 import Interp (Conf(..), interp)
 
-type Basica = ()
-
-ejemplo :: Dibujo Basica
-ejemplo = figura ()
+data Basica = Hexagono
+    deriving (Show, Eq)
 
 interpBas :: Output Basica
-interpBas () x y w = line . map (x V.+) $ [0.1 V.* w V.+ 0.27 V.* y, 0.1 V.* w V.+ 0.73 V.* y, y V.+ half w, 0.9 V.* w V.+ 0.73 V.* y, 0.9 V.* w V.+ 0.27 V.* y, half w, 0.1 V.* w V.+ 0.27 V.* y]
+interpBas Hexagono x y w = line . map (x V.+) $ puntos
+    where puntos = [base V.+ pIzq, base V.+ pDer, y V.+ half w, techo V.+ pDer, 
+                    techo V.+ pIzq, half w, base V.+ pIzq]
+          base = 0.1 V.* w
+          techo = 0.9 V.* w
+          pIzq = 0.27 V.* y
+          pDer = 0.73 V.* y
 
-usoModificar :: Int -> Dibujo Basica
-usoModificar 1 = figura ()
-usoModificar n = encimar (figura ()) (modificar 0.9 0.9 (usoModificar (n-1)))
+usoModificar :: Int -> Basica ->Dibujo Basica
+usoModificar 1 p = figura p
+usoModificar n p = figura p ^^^ modificar 0.9 0.9 (usoModificar (n - 1) p)
 
 pruebaModificarConf :: Conf
 pruebaModificarConf = Conf {
     name = "PruebaModificar",
-    pic = interp interpBas (modificar 2 2 (usoModificar 500))
+    pic = interp interpBas (modificar 2 2 (usoModificar 500 Hexagono))
 }

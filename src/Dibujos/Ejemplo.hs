@@ -3,7 +3,7 @@ module Dibujos.Ejemplo (
     ejemploConf
 ) where
     
-import Graphics.Gloss (white, line, polygon, pictures)
+import Graphics.Gloss (line, polygon, pictures)
 
 import qualified Graphics.Gloss.Data.Point.Arithmetic as V
 

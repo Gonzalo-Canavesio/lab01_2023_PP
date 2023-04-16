@@ -7,7 +7,9 @@ module Internals.Dibujo where
     | Juntar <Float> <Float> <Fig> <Fig> 
     | Encimar <Fig> <Fig>
 -}
---Agregado al lenguaje un operador para permitir modificar las proporciones de un dibujo.
+
+{- Se agregó al lenguaje el operador Modificar para permitir modificar las 
+proporciones de un dibujo -}
 data Dibujo a = Figura a | Rotar (Dibujo a) | Espejar (Dibujo a) 
     | Rot45 (Dibujo a)
     | Modificar Float Float (Dibujo a)
@@ -16,16 +18,15 @@ data Dibujo a = Figura a | Rotar (Dibujo a) | Espejar (Dibujo a)
     | Encimar (Dibujo a) (Dibujo a)
     deriving (Eq, Show)
 
--- Agreguen los tipos y definan estas funciones
-
--- Construcción de dibujo. Abstraen los constructores.
+-- Funciones para abstraer los constructores de la construción del dibujo
 figura :: a -> Dibujo a
 figura = Figura
 
 rotar :: Dibujo a -> Dibujo a
 rotar d = case d of
   Rotar (Rotar (Rotar a)) -> a
-  _ -> Rotar d
+  _ -> Rotar d 
+-- Si se aplica una 4ta rotación seguida, solo se remueven las 3 rotaciones
 
 modificar :: Float -> Float -> Dibujo a -> Dibujo a
 modificar = Modificar
@@ -50,6 +51,5 @@ encimar = Encimar
 -- Componer negativamente es un error!
 comp :: (a -> a) -> Int -> a -> a
 comp f 0 a = a
-comp f n a | n > 0 =   f (comp f (n-1) a)
+comp f n a | n > 0 =   f (comp f (n - 1) a)
            | otherwise = error "No se puede componer negativamente"
-

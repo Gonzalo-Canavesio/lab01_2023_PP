@@ -7,15 +7,16 @@ module Interp (
 
 import Graphics.Gloss(Picture, Display(InWindow), makeColorI, color, pictures, translate, white, display)
 import Dibujo (Dibujo, foldDib)
-import FloatingPic (FloatingPic, Output, grid, half) -- Agregamos el half para utilizarlo en InterpRot45
-import qualified Graphics.Gloss.Data.Point.Arithmetic as V -- Agregamos esta linea para poder utilizar operadores de vectores
+import FloatingPic (FloatingPic, Output, grid, half)
+import qualified Graphics.Gloss.Data.Point.Arithmetic as V 
+-- Agregamos la linea anterior para poder utilizar operadores de vectores
 
--- Interpretación de un dibujo
--- formulas sacadas del enunciado
---Agregan al lenguaje un operador para permitir modificar las proporciones de un dibujo.
+-- Interpretación de un dibujo. Las formulas fueron sacadas del enunciado
+-- También se agrega el operador para modificar las proporciones (formula propia)
 
 interp :: Output a -> Output (Dibujo a)
-interp interpBasica = foldDib interpBasica interpRotar interpEspejar interpRot45 interpApilar interpJuntar interpEncimar interpModificar
+interp interpBasica = foldDib interpBasica interpRotar interpEspejar interpRot45
+                      interpApilar interpJuntar interpEncimar interpModificar
 
 interpRotar :: FloatingPic -> FloatingPic
 interpRotar f x w h = f (x V.+ w) h (V.negate w)
@@ -25,7 +26,6 @@ interpModificar n m f x w h = f x' w' h'
     where x' = x V.- (half (w' V.- w) V.+ half (h' V.- h))
           w' = n V.* w
           h' = m V.* h
-
 
 interpRot45 :: FloatingPic -> FloatingPic
 interpRot45 f x w h = f (x V.+ half (w V.+ h)) (half (w V.+ h)) (half (h V.- w))
@@ -66,5 +66,6 @@ initial cfg size = do
     let n = name cfg
         win = InWindow n (ceiling size, ceiling size) (0, 0)
     display win white $ withGrid (interpConf cfg size size) size size
-  where withGrid p x y = translate (-size/2) (-size/2) $ pictures [p, color grey $ grid (ceiling $ size / 10) (0, 0) x 10]
+  where withGrid p x y = translate (-size/2) (-size/2) $ pictures 
+                         [p, color grey $ grid (ceiling $ size / 10) (0, 0) x 10]
         grey = makeColorI 120 120 120 120
